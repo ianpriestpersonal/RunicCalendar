@@ -1,8 +1,6 @@
 package calendar.play;
 
 import calendar.futharks.Rune;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -11,8 +9,6 @@ import java.time.ZoneId;
 import java.util.*;
 
 public class MoonSymbol {
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(MoonSymbol.class);
 
     private final Rune[] futhark;
 
