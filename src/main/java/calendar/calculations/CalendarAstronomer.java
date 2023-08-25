@@ -10,7 +10,7 @@
  *
  *****************************************************************************************
  */
-package calendar.play;
+package calendar.calculations;
 
 import java.time.LocalDate;
 import java.time.ZoneId;

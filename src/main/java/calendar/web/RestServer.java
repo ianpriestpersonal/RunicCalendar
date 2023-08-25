@@ -17,15 +17,14 @@
 package calendar.web;
 
 import calendar.futharks.Futharks;
-import calendar.play.RunicCalendar;
-import calendar.play.RunicDay;
+import calendar.symbols.RunicCalendar;
+import calendar.symbols.RunicDay;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Launcher;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
-import io.vertx.ext.web.handler.StaticHandler;
 
 import java.time.LocalDate;
 import java.util.List;

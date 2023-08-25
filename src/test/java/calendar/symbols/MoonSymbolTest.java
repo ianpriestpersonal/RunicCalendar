@@ -1,4 +1,4 @@
-package calendar.play;
+package calendar.symbols;
 
 import calendar.futharks.OldEnglish;
 import calendar.futharks.Futharks;

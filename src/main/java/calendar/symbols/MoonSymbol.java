@@ -1,5 +1,6 @@
-package calendar.play;
+package calendar.symbols;
 
+import calendar.calculations.CalendarAstronomer;
 import calendar.futharks.Rune;
 
 import java.time.LocalDate;

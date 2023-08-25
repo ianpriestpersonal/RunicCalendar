@@ -1,7 +1,7 @@
 package calendar.web;
 
 import calendar.futharks.Rune;
-import calendar.play.RunicDay;
+import calendar.symbols.RunicDay;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
