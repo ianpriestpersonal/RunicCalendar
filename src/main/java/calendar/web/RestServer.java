@@ -17,16 +17,20 @@
 package calendar.web;
 
 import calendar.futharks.Futharks;
+import calendar.futharks.Rune;
 import calendar.symbols.RunicCalendar;
 import calendar.symbols.RunicDay;
+import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Launcher;
-import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 /**
@@ -45,19 +49,103 @@ public class RestServer extends AbstractVerticle {
 
     router.route().handler(BodyHandler.create());
     router.get("/calendar").handler(this::handleGetCalendar);
+    router.get("/calendar/day").handler(this::handleGetDay);
+    router.get("/calendar/month").handler(this::handleGetMonth);
 
     vertx.createHttpServer().requestHandler(router).listen(8080);
   }
 
   private void handleGetCalendar(RoutingContext routingContext) {
+    handleGetDay(routingContext);
+  }
 
-    HttpServerResponse response = routingContext.response();
+  private void handleGetDay(RoutingContext routingContext) {
+
+    final DateDO dateDO = getDate(routingContext.request());
+    if ( !dateDO.isValid ) {
+      routingContext.response().setStatusCode(HttpResponseStatus.BAD_REQUEST.code()).end(dateDO.errorMsg);
+      return;
+    }
+
+    RunicCalendar rc = new RunicCalendar(dateDO.year, Futharks.OLD_ENGLISH);
+    final List<RunicDay> calendar = rc.getCalendar(dateDO.mmonth);
+
+    final Rune sundayRune = rc.getSundayRune(dateDO.mmonth);
+    final RunicDay runicDay = calendar.get(dateDO.day-1);
+
+    JsonObject reply = new JsonObject()
+            .put("day", dateDO.day)
+            .put("month", dateDO.mmonth.getValue())
+            .put("year", dateDO.year)
+            .put("runicDay", JsonConverter.toJson(runicDay))
+            .put("sunday", JsonConverter.toJson(sundayRune));
+
+    routingContext.response().putHeader("content-type", "application/json").end(reply.encode());
+  }
+
+  private void handleGetMonth(RoutingContext routingContext) {
+
+    DateDO dateDO = getDate(routingContext.request());
+    if ( !dateDO.isValid ) {
+      routingContext.response().setStatusCode(HttpResponseStatus.BAD_REQUEST.code()).end(dateDO.errorMsg);
+      return;
+    }
+
+    RunicCalendar rc = new RunicCalendar(dateDO.year, Futharks.OLD_ENGLISH);
+    final List<RunicDay> calendar = rc.getCalendar(dateDO.mmonth);
+
+    final List<Rune> sundayRunes = rc.getSundayRunes();
+
+    JsonObject reply = new JsonObject()
+            .put("day", dateDO.day)
+            .put("month", dateDO.mmonth.getValue())
+            .put("year", dateDO.year)
+            .put("runicMonth", JsonConverter.daysToJson(calendar))
+            .put("sundays", JsonConverter.runesToJson(sundayRunes));
+
+    routingContext.response().putHeader("content-type", "application/json").end(reply.encode());
+  }
+
+  private DateDO getDate(HttpServerRequest request) {
+
+    DateDO dateDO = new DateDO();
 
     LocalDate now = LocalDate.now();
 
-    RunicCalendar rc = new RunicCalendar(now.getYear(), Futharks.OLD_ENGLISH);
-    final List<RunicDay> calendar = rc.getCalendar(now.getMonth());
-    response.putHeader("content-type", "application/json").end(JsonConverter.daysToJson(calendar).encode());
+    final String year = request.getParam("year", "" + now.getYear());
+    final String month = request.getParam("month", "" + now.getMonth().getValue());
+    final String day = request.getParam("day", "" + now.getDayOfMonth());
+
+    dateDO.year = Integer.parseInt(year);
+    dateDO.month = Integer.parseInt(month);
+    if ( dateDO.month < 1 || dateDO.month > 12 ) {
+      dateDO.isValid = false;
+      dateDO.errorMsg = "Invalid month: " + dateDO.month;
+      return dateDO;
+    }
+    dateDO.mmonth = Month.of(dateDO.month);
+
+    dateDO.day = Integer.parseInt(day);
+    if ( dateDO.day < 1 || dateDO.day > dateDO.mmonth.length(false) ) {
+      dateDO.errorMsg = "Invalid day: " + dateDO.day;
+      dateDO.isValid = false;
+      return dateDO;
+    }
+
+    dateDO.isValid = true;
+    return dateDO;
+  }
+
+  private static class DateDO {
+    int day;
+    int month;
+    int year;
+
+    Month mmonth;
+
+    boolean isValid;
+    String errorMsg;
+
   }
 
 }

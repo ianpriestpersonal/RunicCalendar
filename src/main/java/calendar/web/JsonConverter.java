@@ -22,7 +22,7 @@ public class JsonConverter {
      public static JsonObject toJson(RunicDay day) {
           JsonObject to = new JsonObject();
           to.put("day", toJson(day.getDay()));
-          to.put("newMoon", day.getNewMoon().orElse(null));
+          to.put("newMoon", day.getNewMoon().map(JsonConverter::toJson).orElse(null));
           return to;
      }
 

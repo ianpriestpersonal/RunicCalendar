@@ -49,4 +49,14 @@ public class RunicCalendar {
         return calendar;
     }
 
+    /**
+     * Get the current sunday rune.
+     *
+     * In a leap year, will return the second sunday rune if month is after feb
+     * @param mmonth the month
+     * @return the sunday rune
+     */
+    public Rune getSundayRune(Month mmonth) {
+        return sundaySymbol.getSundayRune(mmonth, year);
+    }
 }
