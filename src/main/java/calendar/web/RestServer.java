@@ -51,6 +51,7 @@ public class RestServer extends AbstractVerticle {
     router.get("/calendar").handler(this::handleGetCalendar);
     router.get("/calendar/day").handler(this::handleGetDay);
     router.get("/calendar/month").handler(this::handleGetMonth);
+    router.get("/calendar/year").handler(this::handleGetYear);
 
     vertx.createHttpServer().requestHandler(router).listen(8080);
   }
@@ -101,6 +102,29 @@ public class RestServer extends AbstractVerticle {
             .put("month", dateDO.mmonth.getValue())
             .put("year", dateDO.year)
             .put("runicMonth", JsonConverter.daysToJson(calendar))
+            .put("sundays", JsonConverter.runesToJson(sundayRunes));
+
+    routingContext.response().putHeader("content-type", "application/json").end(reply.encode());
+  }
+
+  private void handleGetYear(RoutingContext routingContext) {
+
+    DateDO dateDO = getDate(routingContext.request());
+    if ( !dateDO.isValid ) {
+      routingContext.response().setStatusCode(HttpResponseStatus.BAD_REQUEST.code()).end(dateDO.errorMsg);
+      return;
+    }
+
+    RunicCalendar rc = new RunicCalendar(dateDO.year, Futharks.OLD_ENGLISH);
+
+    final List<Rune> sundayRunes = rc.getSundayRunes();
+    final Rune moonRune = rc.getMoonRune();
+
+    JsonObject reply = new JsonObject()
+            .put("day", dateDO.day)
+            .put("month", dateDO.mmonth.getValue())
+            .put("year", dateDO.year)
+            .put("moon", JsonConverter.toJson(moonRune))
             .put("sundays", JsonConverter.runesToJson(sundayRunes));
 
     routingContext.response().putHeader("content-type", "application/json").end(reply.encode());

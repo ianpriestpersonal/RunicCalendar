@@ -59,4 +59,12 @@ public class RunicCalendar {
     public Rune getSundayRune(Month mmonth) {
         return sundaySymbol.getSundayRune(mmonth, year);
     }
+
+    /**
+     * Get the moon rune for the year
+     * @return the moon rune
+     */
+    public Rune getMoonRune() {
+        return moonSymbol.getMoonRune(year);
+    }
 }

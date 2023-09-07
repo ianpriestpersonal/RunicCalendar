@@ -71,6 +71,16 @@ public class MoonSymbol {
     }
 
     /**
+     * Get the moon rune for a given year
+     *
+     * @param year
+     * @return
+     */
+    public Rune getMoonRune(int year) {
+        return getRune(getMagicNumber(year));
+    }
+
+    /**
      * Get the rune (one of 19) for a magicNumber (0-18)
      * @param magicNumber 0-18
      * @return the rune for the number
