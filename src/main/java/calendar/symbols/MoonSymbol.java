@@ -92,7 +92,7 @@ public class MoonSymbol {
     /**
      * Get the moon runes for the given month for 19 years starting at the given year.
      *
-     * The returned list will be the same lenght as there are days in the month, except for a leap year
+     * The returned list will be the same length as there are days in the month, except for a leap year
      * when Feb will still only be 28 days. Each list position gives the date in the month.
      *
      * @param month the month
