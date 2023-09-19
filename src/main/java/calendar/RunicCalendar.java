@@ -1,6 +1,10 @@
-package calendar.symbols;
+package calendar;
 
 import calendar.futharks.Rune;
+import calendar.symbols.DaySymbol;
+import calendar.symbols.MoonSymbol;
+import calendar.symbols.RunicDay;
+import calendar.symbols.SundaySymbol;
 
 import java.time.Month;
 import java.util.ArrayList;
@@ -27,10 +31,6 @@ public class RunicCalendar {
      */
     public List<Rune> getSundayRunes() {
         return sundaySymbol.getSundayRunes(year);
-    }
-
-    public List<Rune> getDays(Month month) {
-        return daySymbol.getDayRunesForMonth(month);
     }
 
     public List<RunicDay> getCalendar(Month month) {

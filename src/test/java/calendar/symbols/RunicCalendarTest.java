@@ -1,5 +1,6 @@
 package calendar.symbols;
 
+import calendar.RunicCalendar;
 import calendar.futharks.Futharks;
 import calendar.futharks.Rune;
 import junit.framework.TestCase;

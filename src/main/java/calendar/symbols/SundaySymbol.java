@@ -40,7 +40,7 @@ public class SundaySymbol {
      * @param year the year
      * @return the rune that means sunday
      */
-    protected Rune getSundayRune(Month month, int year) {
+    public Rune getSundayRune(Month month, int year) {
 
         LocalDate yearMonth = LocalDate.of(year, month, 1);
         return daySymbol.getRune(yearMonth.with(firstInMonth(DayOfWeek.SUNDAY)));

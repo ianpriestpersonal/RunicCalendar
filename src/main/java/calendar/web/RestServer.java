@@ -18,7 +18,7 @@ package calendar.web;
 
 import calendar.futharks.Futharks;
 import calendar.futharks.Rune;
-import calendar.symbols.RunicCalendar;
+import calendar.RunicCalendar;
 import calendar.symbols.RunicDay;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.AbstractVerticle;
