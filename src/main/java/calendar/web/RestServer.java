@@ -19,6 +19,7 @@ package calendar.web;
 import calendar.futharks.Futharks;
 import calendar.futharks.Rune;
 import calendar.RunicCalendar;
+import calendar.seasons.OldMonths;
 import calendar.symbols.RunicDay;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.AbstractVerticle;
@@ -83,7 +84,8 @@ public class RestServer extends AbstractVerticle {
             .put("year", dateDO.year)
             .put("runicDay", JsonConverter.toJson(runicDay))
             .put("sunday", JsonConverter.toJson(sundayRune))
-            .put("moon", JsonConverter.toJson(moon));
+            .put("moon", JsonConverter.toJson(moon))
+            .put("oldMonth", JsonConverter.toJson(OldMonths.BRITISH[dateDO.mmonth.getValue()-1]));
 
     routingContext.response().putHeader("content-type", "application/json").end(reply.encode());
   }
@@ -107,7 +109,8 @@ public class RestServer extends AbstractVerticle {
             .put("year", dateDO.year)
             .put("runicMonth", JsonConverter.daysToJson(calendar))
             .put("sundays", JsonConverter.runesToJson(sundayRunes))
-            .put("moon", JsonConverter.toJson(moonRune));
+            .put("moon", JsonConverter.toJson(moonRune))
+            .put("oldMonth", JsonConverter.toJson(OldMonths.BRITISH[dateDO.mmonth.getValue()-1]));
 
     routingContext.response().putHeader("content-type", "application/json").end(reply.encode());
   }
