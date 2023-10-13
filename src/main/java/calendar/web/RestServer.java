@@ -72,10 +72,9 @@ public class RestServer extends AbstractVerticle {
     }
 
     RunicCalendar rc = new RunicCalendar(dateDO.year, Futharks.OLD_ENGLISH);
-    final List<RunicDay> calendar = rc.getCalendar(dateDO.mmonth);
 
+    final RunicDay runicDay = rc.getDay(dateDO.mmonth, dateDO.day);
     final Rune sundayRune = rc.getSundayRune(dateDO.mmonth);
-    final RunicDay runicDay = calendar.get(dateDO.day-1);
     final Rune moon = rc.getMoonRune();
 
     JsonObject reply = new JsonObject()

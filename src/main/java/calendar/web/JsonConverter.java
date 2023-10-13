@@ -2,6 +2,7 @@ package calendar.web;
 
 import calendar.futharks.Rune;
 import calendar.seasons.OldMonth;
+import calendar.symbols.MoonPhase;
 import calendar.symbols.RunicDay;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -24,6 +25,8 @@ public class JsonConverter {
           JsonObject to = new JsonObject();
           to.put("day", toJson(day.getDay()));
           to.put("newMoon", day.getNewMoon().map(JsonConverter::toJson).orElse(null));
+          to.put("moonPhase", toJson(day.getMoonPhase()));
+
           return to;
      }
 
@@ -49,6 +52,15 @@ public class JsonConverter {
 
           to.put("oldName", from.oldName());
           to.put("meaning", from.oldMeaning());
+
+          return to;
+     }
+
+     public static JsonObject toJson(MoonPhase from) {
+          JsonObject to = new JsonObject();
+
+          to.put("phase", from.getPhase());
+          to.put("ordinal", from.getOrdinal());
 
           return to;
      }

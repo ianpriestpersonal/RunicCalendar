@@ -81,6 +81,32 @@ public class MoonSymbol {
     }
 
     /**
+     * Get the moon phase as a double and as an int.
+     * The phase is a double from 0-0.9999999 where
+     * 0.0 = new moon
+     * 0.25 = first quarter
+     * 0.5 = full moon
+     * 0.75 = last quarter
+     *
+     * The ordinal is a 28-step integer calculated from the phase with a range of 0-27 where
+     *
+     * 0 = new moon
+     * 7 = first quarter
+     * 14 = full moon
+     * 21 = last quarter
+     *
+     * @param date
+     * @return MoonPhase with phase and ordinal on the given date
+     */
+    public static MoonPhase getMoonPhase(LocalDate date) {
+        CalendarAstronomer ca = new CalendarAstronomer(date);
+
+        double phase = ca.getMoonPhase();
+        int ordinal = getMoonOrdinal(phase);
+        return new MoonPhase(phase, ordinal);
+    }
+
+    /**
      * Get the rune (one of 19) for a magicNumber (0-18)
      * @param magicNumber 0-18
      * @return the rune for the number
@@ -127,6 +153,26 @@ public class MoonSymbol {
         return new Date(ca.getMoonTime(CalendarAstronomer.NEW_MOON, true)).toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
+
+    }
+
+    /**
+     * Splits the moon phase into 28 ordinal steps.
+     *
+     * 0 = new moon
+     * 7 = first quarter
+     * 14 = full moon
+     * 21 = last quarter
+     *
+     * based on the CalendarAstronomer moonPhase of 0 = new moon, 0.5=full moon
+     *
+     *
+     * @return int range 0-27, the ordinal for the supplied date
+     */
+    private static int getMoonOrdinal(double moonPhase) {
+
+        final long ordinal = (long) Math.floor(moonPhase*28);
+        return (int) ordinal;
 
     }
 

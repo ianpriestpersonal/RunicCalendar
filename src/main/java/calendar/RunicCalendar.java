@@ -1,11 +1,9 @@
 package calendar;
 
 import calendar.futharks.Rune;
-import calendar.symbols.DaySymbol;
-import calendar.symbols.MoonSymbol;
-import calendar.symbols.RunicDay;
-import calendar.symbols.SundaySymbol;
+import calendar.symbols.*;
 
+import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +41,21 @@ public class RunicCalendar {
         assert dayRunesForMonth.size() == moonRhyme.size();
 
         for (int i = 0; i < dayRunesForMonth.size(); i++) {
-            calendar.add(new RunicDay(moonRhyme.get(i), dayRunesForMonth.get(i)));
+            calendar.add(new RunicDay(moonRhyme.get(i), dayRunesForMonth.get(i),
+                    moonSymbol.getMoonPhase(LocalDate.of(year, month, i+1))));
         }
 
         return calendar;
+    }
+
+    public RunicDay getDay(Month month, int day) {
+        LocalDate date = LocalDate.of(year, month, day);
+        final Rune rune = daySymbol.getRune(date);
+        final Optional<Rune> moonRune = moonSymbol.getMoonRune(date);
+        final MoonPhase moonPhase = moonSymbol.getMoonPhase(date);
+
+        return new RunicDay(moonRune, rune, moonPhase);
+
     }
 
     /**

@@ -712,7 +712,9 @@ public class CalendarAstronomer {
     public double getMoonPhase() {
         // See page 147 of "Practial Astronomy with your Calculator",
         // by Peter Duffet-Smith, for details on the algorithm.
-        return 0.5 * (1 - Math.cos(getMoonAge()));
+    //    return 0.5 * (1 - Math.cos(getMoonAge())); Seems wrong - returns 1 for full moon
+
+        return Math.toDegrees(getMoonAge()) / 360.0;
     }
     
     private static class MoonAge {
