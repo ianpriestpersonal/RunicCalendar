@@ -3,10 +3,7 @@ package calendar.symbols;
 import calendar.calculations.CalendarAstronomer;
 import calendar.futharks.Rune;
 
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.YearMonth;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.*;
 
 public class MoonSymbol {
@@ -96,10 +93,15 @@ public class MoonSymbol {
      * 21 = last quarter
      *
      * @param date
-     * @return MoonPhase with phase and ordinal on the given date
+     * @return MoonPhase with phase and ordinal at midday on the given date
      */
     public static MoonPhase getMoonPhase(LocalDate date) {
-        CalendarAstronomer ca = new CalendarAstronomer(date);
+
+        final Date midday = Date.from(date.atTime(12, 0)
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
+
+        CalendarAstronomer ca = new CalendarAstronomer(midday);
 
         double phase = ca.getMoonPhase();
         int ordinal = getMoonOrdinal(phase);
@@ -171,9 +173,11 @@ public class MoonSymbol {
      */
     private static int getMoonOrdinal(double moonPhase) {
 
-        final long ordinal = (long) Math.floor(moonPhase*28);
-        return (int) ordinal;
+        long ordinal = (long) Math.floor((moonPhase+halfWidth)*28);
+        // Adding the halfWidth slide can take it over 27, which is a wrap back to 0
+        return ordinal < 28 ? (int) ordinal : 0;
 
     }
 
+    private static final double halfWidth = 1.0/56.0;
 }
